@@ -1,0 +1,34 @@
+import random
+import math
+
+# (x - 2) ** 2
+
+a = -5
+b = 5
+zero_one = ["0", "1"]
+m = []
+stx = []
+sty = []
+min_x = 0
+min_y = math.inf
+numb_of_lines = int(input("Ведите количество бинарных строк:"))
+numb_in_line = int(input("Введите количество символов в строке:"))
+n = int(input("Введите количество запусков для усреднения ошибки:"))
+for _ in range(n):
+    for i in range(numb_of_lines):
+        s = ""
+        for _ in range(numb_in_line):
+            s += random.choice(zero_one)
+        stx.append(int(s, 2))
+        stx[i] = stx[i] * (b - a) / (2 ** numb_in_line - 1) + a
+    for j in range(len(stx)):
+        y = (stx[j] - 2) ** 2
+        if y < min_y:
+            min_y = y
+            min_x = stx[j]
+        sty.append(y)
+    y1 = (0 - min(sty)) ** 2
+    m.append(y1)
+e_y = (sum(m) / n) ** 0.5
+print(min_x)
+print(e_y)
