@@ -1,0 +1,39 @@
+
+# Построение графика функции Egg Holde
+
+import matplotlib.pyplot as plt
+from numpy import *
+
+
+def f(x1, x2):
+    part_2 = sqrt(fabs(x2 + x1 / 2 + 47))
+    part_1 = sqrt(fabs(x1 - (x2 + 47)))
+    f_x = -(x2 + 47) * sin(part_2) - x1 * sin(part_1)
+    return f_x
+
+
+x1 = linspace(-512, 512, 100)
+x2 = linspace(-512, 512, 100)
+X1, X2 = meshgrid(x1, x2)
+
+
+fig = plt.figure(figsize=[12, 8])
+ax = plt.axes(projection='3d')
+ax.plot_surface(X1, X2, f(X1, X2), cmap='viridis', alpha=1)
+ax.plot_wireframe(X1, X2, f(X1, X2), ccount=0.0001, rcount=1, alpha=0.1)
+ax.set_xlabel('x1')
+ax.set_ylabel('x2')
+ax.set_zlabel('f(x)')
+plt.show()
+
+
+# График ошибки Монте Карло
+import numpy as np
+import matplotlib.pyplot as plt
+k = [10, 40, 70, 100, 200, 300, 500, 700, 1000]
+e = [0.00895231499460349, 0.003667288605367334, 0.0016028851474927603, 0.0008494886267283743, 0.00021110614438621844, 0.00013737197360460393,
+     1.9755806669582714e-06, 4.827625587307086e-07, 9.40429124766972e-08]
+plt.plot(k, e)
+plt.show()
+
+
