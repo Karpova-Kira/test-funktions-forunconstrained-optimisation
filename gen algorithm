@@ -1,0 +1,208 @@
+# Реализация генетического алгоритма с 2 типами скрещивания по заданным параметрам для поиска минимума функций.
+
+
+
+1. Одноточечное скрещивание
+from random import *
+import math
+
+a = -512
+b = 512
+
+
+def func(x1, x2):
+    y = -x1 * math.sin((abs(x1 - 47 - x2)) ** 0.5) - (x2 + 47) * math.sin(
+        (abs(x1 / 2 + 47 + x2)) ** 0.5)
+    return -y
+
+size_item = 20
+size_population = 200
+generations = 20
+mutatioin = 0.03
+
+
+def function_fitness(bin_list):
+    global a, b, size_item
+    s = "".join([str(bit) for bit in bin_list[:len(bin_list) // 2]])
+    dec = int(s, 2)
+    k = dec / (2 ** (size_item // 2) - 1)
+    x1 = k * (b - a) + a
+    s = "".join([str(bit) for bit in bin_list[len(bin_list) // 2:]])
+    dec = int(s, 2)
+    k = dec / (2 ** (size_item // 2) - 1)
+    x2 = k * (b - a) + a
+    return func(x1, x2)
+
+
+population = []
+fitness = []
+best_item = None
+best_fitness = None
+for _ in range(size_population):
+    item = choices([0, 1], k=size_item)
+    population.append(item)
+    f = function_fitness(item)
+    fitness.append(f)
+    if best_fitness is None or f > best_fitness:
+        best_item = item
+        best_fitness = f
+
+for h in range(generations - 1):
+    population_child = []
+    fitness_child = []
+
+    for j in range(size_population):
+        i_player1 = randint(0, size_population - 1)
+        i_player2 = randint(0, size_population - 1)
+        if fitness[i_player1] > fitness[i_player2]:
+            i_parent1 = i_player1
+        else:
+            i_parent1 = i_player2
+
+        i_player1 = randint(0, size_population - 1)
+        i_player2 = randint(0, size_population - 1)
+        if fitness[i_player1] > fitness[i_player2]:
+            i_parent2 = i_player1
+        else:
+            i_parent2 = i_player2
+
+        parent1 = population[i_parent1]
+        parent2 = population[i_parent2]
+
+        r = randint(0, size_item - 1)
+        child = parent1[:r + 1] + parent2[r + 1:]
+
+        for i in range(len(child)):
+            if random() <= mutatioin:
+                if child[i] == 1:
+                    child[i] = 0
+                else:
+                    child[i] = 1
+        population_child.append(child)
+        f = function_fitness(child)
+        fitness_child.append(f)
+        if f > best_fitness:
+            best_item = child
+            best_fitness = f
+    population = population_child
+    fitness = fitness_child
+print(f'final {best_item} = {round(-best_fitness, 6)}')
+s = "".join([str(bit) for bit in best_item[:len(best_item) // 2]])
+dec = int(s, 2)
+k = dec / (2 ** (size_item // 2) - 1)
+x1 = k * (b - a) + a
+s = "".join([str(bit) for bit in best_item[len(best_item) // 2:]])
+dec = int(s, 2)
+k = dec / (2 ** (size_item // 2) - 1)
+x2 = k * (b - a) + a
+print(x1, x2)
+
+
+
+
+
+2. Двухточечное скрещивание
+from random import *
+import math
+
+a = -512
+b = 512
+
+
+def func(x1, x2):
+    y = -x1 * math.sin((abs(x1 - 47 - x2)) ** 0.5) - (x2 + 47) * math.sin(
+        (abs(x1 / 2 + 47 + x2)) ** 0.5)
+    return -y
+
+size_item = 20
+size_population = 200
+generations = 20
+mutatioin = 0.03
+
+
+def function_fitness(bin_list):
+    global a, b, size_item
+    s = "".join([str(bit) for bit in bin_list[:len(bin_list) // 2]])
+    dec = int(s, 2)
+    k = dec / (2 ** (size_item // 2) - 1)
+    x1 = k * (b - a) + a
+    s = "".join([str(bit) for bit in bin_list[len(bin_list) // 2:]])
+    dec = int(s, 2)
+    k = dec / (2 ** (size_item // 2) - 1)
+    x2 = k * (b - a) + a
+    return func(x1, x2)
+
+
+population = []
+fitness = []
+best_item = None
+best_fitness = None
+for _ in range(size_population):
+    item = choices([0, 1], k=size_item)
+    population.append(item)
+    f = function_fitness(item)
+    fitness.append(f)
+    if best_fitness is None or f > best_fitness:
+        best_item = item
+        best_fitness = f
+
+for h in range(generations - 1):
+    population_child = []
+    fitness_child = []
+
+    for j in range(size_population):
+        i_player1 = randint(0, size_population - 1)
+        i_player2 = randint(0, size_population - 1)
+        if fitness[i_player1] > fitness[i_player2]:
+            i_parent1 = i_player1
+        else:
+            i_parent1 = i_player2
+
+        i_player1 = randint(0, size_population - 1)
+        i_player2 = randint(0, size_population - 1)
+        if fitness[i_player1] > fitness[i_player2]:
+            i_parent2 = i_player1
+        else:
+            i_parent2 = i_player2
+
+        parent1 = population[i_parent1]
+        parent2 = population[i_parent2]
+
+        r = randint(0, size_item - 1)
+        child = parent1[:r + 1] + parent2[r + 1:]
+        # while True:
+        #     r = randint(0, size_item - 1)
+        #     r1 = randint(0, size_item - 1)
+        #     if r != r1 and r < r1:
+        #         break
+        #
+        # child = parent1[:r + 1] + parent2[r + 1: r1 + 1] + parent1[r1 + 1:]
+
+        for i in range(len(child)):
+            if random() <= mutatioin:
+                if child[i] == 1:
+                    child[i] = 0
+                else:
+                    child[i] = 1
+        population_child.append(child)
+        f = function_fitness(child)
+        fitness_child.append(f)
+        if f > best_fitness:
+            best_item = child
+            best_fitness = f
+    population = population_child
+    fitness = fitness_child
+print(f'final {best_item} = {round(-best_fitness, 6)}')
+s = "".join([str(bit) for bit in best_item[:len(best_item) // 2]])
+dec = int(s, 2)
+k = dec / (2 ** (size_item // 2) - 1)
+x1 = k * (b - a) + a
+s = "".join([str(bit) for bit in best_item[len(best_item) // 2:]])
+dec = int(s, 2)
+k = dec / (2 ** (size_item // 2) - 1)
+x2 = k * (b - a) + a
+print(x1, x2)
+
+
+
+
